@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ski Globe</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- globe.gl bundles three.js, so this single script is all we need. -->
+  <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js"></script>
+</head>
+<body>
+  <!-- The globe renders into this div and fills the window. -->
+  <div id="globe"></div>
+
+  <!-- Small status message shown while the resort data loads. -->
+  <div id="status" role="status">Loading ski resorts…</div>
+
+  <!-- Side panel: hidden until a resort is clicked. -->
+  <aside id="panel" hidden aria-live="polite">
+    <button id="close" aria-label="Close panel">×</button>
+    <h2 id="resort-name"></h2>
+    <p id="resort-meta" class="muted"></p>
+    <h3>7-day snowfall forecast</h3>
+    <div id="forecast"></div>
+    <p class="muted small">Forecast: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> ·
+      Resorts: <a href="https://openskimap.org/" target="_blank" rel="noopener">OpenSkiMap</a> (© OpenStreetMap contributors)</p>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
