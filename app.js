@@ -78,7 +78,7 @@ function makeClusterBadge(cluster) {
   const el = document.createElement('button');
   el.className = 'badge cluster';
   const n = cluster.members.length;
-  el.style.setProperty('--size', `${Math.min(26 + 3 * Math.sqrt(n), 40)}px`);
+  el.style.setProperty('--size', `${Math.min(30 + 3 * Math.sqrt(n), 44)}px`);
   el.setAttribute('aria-label', `${n} resorts: ${cluster.members.map(r => r.name).join(', ')}. Click to zoom in.`);
 
   const count = document.createElement('span');
@@ -114,7 +114,7 @@ function makeClusterBadge(cluster) {
 // they pile up. Each time the zoom changes we work out how many degrees of the
 // globe a badge covers, and merge resorts closer together than that.
 
-const BADGE_GAP_PX = 30;   // two badges closer than this on screen get merged
+const BADGE_GAP_PX = 36;   // two badges closer than this on screen get merged
 let allResorts = [];
 let currentCellDeg = null;
 const elementCache = new Map(); // reuse DOM elements so logos don't reload
