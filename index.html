@@ -11,21 +11,6 @@
 <body>
   <!-- The globe renders into this div and fills the window. -->
   <div id="globe"></div>
-
-  <!-- Small status message shown while the resort data loads. -->
-  <div id="status" role="status">Loading ski resorts…</div>
-
-  <!-- Side panel: hidden until a resort is clicked. -->
-  <aside id="panel" hidden aria-live="polite">
-    <button id="close" aria-label="Close panel">×</button>
-    <h2 id="resort-name"></h2>
-    <p id="resort-meta" class="muted"></p>
-    <h3>7-day snowfall forecast</h3>
-    <div id="forecast"></div>
-    <p class="muted small">Forecast: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> ·
-      Resorts: <a href="https://openskimap.org/" target="_blank" rel="noopener">OpenSkiMap</a> (© OpenStreetMap contributors)</p>
-  </aside>
-
   <script src="app.js"></script>
 </body>
 </html>
