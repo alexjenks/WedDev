@@ -271,6 +271,18 @@ details.table-view th { color: var(--ink-muted); font-weight: 600; }
 .panel-source a { color: var(--ink-muted); }
 .panel-msg { color: var(--ink-muted); }
 .panel-msg.error { color: #ffb4a8; }
+.retry-btn {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--snow);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.retry-btn:hover, .retry-btn:focus-visible { background: var(--panel-line); outline: none; }
 
 /* Selected resort badge */
 .badge.selected { border-color: var(--badge-ink); box-shadow: 0 0 0 3px var(--snow), 0 1px 4px rgba(0, 0, 0, 0.45); }

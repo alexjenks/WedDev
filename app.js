@@ -345,6 +345,24 @@ const FORECAST_PARAMS = {
   forecast_days: FORECAST_DAYS,
 };
 
+const LIVE_TIMEOUT_MS = 8000;      // give up on Open-Meteo after this and use the snapshot
+const SNAPSHOT_TIMEOUT_MS = 10000;
+const SLOW_NOTICE_MS = 3000;       // when to say "still loading"
+
+// fetch() has no time limit of its own: on a stalled mobile connection it can wait
+// for minutes. Abort after `ms` so we can fall back instead of spinning forever.
+async function fetchWithTimeout(url, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } catch (err) {
+    throw err.name === 'AbortError' ? new Error(`no answer after ${ms / 1000} s`) : err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 const panel = document.getElementById('panel');
 const forecastEl = document.getElementById('forecast');
 const liveCache = new Map();
@@ -360,7 +378,7 @@ try { units = localStorage.getItem('ski-globe-units') || units; } catch {}
 async function fetchLive(resort) {
   if (liveCache.has(resort.id)) return liveCache.get(resort.id);
   const params = new URLSearchParams({ latitude: resort.lat, longitude: resort.lng, ...FORECAST_PARAMS });
-  const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+  const res = await fetchWithTimeout(`https://api.open-meteo.com/v1/forecast?${params}`, LIVE_TIMEOUT_MS);
   if (!res.ok) throw new Error(`Open-Meteo answered ${res.status}`);
   const data = await res.json();
   const forecast = { daily: data.daily, elevation: data.elevation, live: true, fetchedAt: new Date() };
@@ -369,10 +387,14 @@ async function fetchLive(resort) {
 }
 
 async function fetchSnapshot(resort) {
-  snapshotPromise ??= fetch('data/forecasts.json').then(r => (r.ok ? r.json() : null)).catch(() => null);
-  const snap = await snapshotPromise;
-  const f = snap?.resorts?.[resort.id];
-  if (!f) throw new Error('No forecast available for this resort.');
+  snapshotPromise ??= fetchWithTimeout('data/forecasts.json', SNAPSHOT_TIMEOUT_MS)
+    .then(r => (r.ok ? r.json() : null))
+    .catch(() => null);
+  const snapPromise = snapshotPromise;
+  const snap = await snapPromise;
+  if (!snap) { snapshotPromise = null; throw new Error('Check your connection and try again.'); } // allow a retry
+  const f = snap.resorts?.[resort.id];
+  if (!f) throw new Error('No forecast is available for this resort.');
   return { daily: f.daily, elevation: f.elevation, live: false, fetchedAt: new Date(snap.generated_at) };
 }
 
@@ -381,7 +403,9 @@ async function getForecast(resort) {
     return await fetchLive(resort);
   } catch (err) {
     console.info('Live forecast unavailable, using saved snapshot:', err.message);
-    return fetchSnapshot(resort);
+    const snap = await fetchSnapshot(resort);
+    snap.fallbackReason = err.message;
+    return snap;
   }
 }
 
@@ -411,6 +435,11 @@ async function openForecast(resort) {
   document.getElementById('panel-source').textContent = '';
   forecastEl.innerHTML = '<p class="panel-msg">Loading forecast…</p>';
   panel.hidden = false;
+  const slowTimer = setTimeout(() => {
+    if (id === requestId && !currentForecast) {
+      forecastEl.innerHTML = '<p class="panel-msg">Still loading… the connection is slow. If it doesn’t answer soon we’ll show the last saved forecast.</p>';
+    }
+  }, SLOW_NOTICE_MS);
 
   try {
     const forecast = await getForecast(resort);
@@ -422,8 +451,15 @@ async function openForecast(resort) {
     forecastEl.innerHTML = '';
     const p = document.createElement('p');
     p.className = 'panel-msg error';
-    p.textContent = `Couldn't load a forecast: ${err.message}`;
-    forecastEl.append(p);
+    p.textContent = `Couldn't load a forecast. ${err.message}`;
+    const retry = document.createElement('button');
+    retry.type = 'button';
+    retry.className = 'retry-btn';
+    retry.textContent = 'Try again';
+    retry.addEventListener('click', () => openForecast(resort));
+    forecastEl.append(p, retry);
+  } finally {
+    clearTimeout(slowTimer);
   }
 }
 
@@ -583,7 +619,7 @@ function renderForecast() {
     : '';
   document.getElementById('panel-source').innerHTML =
     `Forecast${elev} from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>, ` +
-    (f.live ? `updated ${when}.` : `saved snapshot from ${when}.`) +
+    (f.live ? `updated ${when}.` : `saved snapshot from ${when} (couldn’t reach the live forecast; reopen the resort to try again).`) +
     ' Mountain snowfall varies a lot with elevation; treat these as estimates.';
 }
 
