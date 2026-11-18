@@ -17,6 +17,32 @@ globe.pointOfView({ lat: 42, lng: -100, altitude: 2.2 });
 globe.controls().autoRotate = !matchMedia('(prefers-reduced-motion: reduce)').matches;
 globe.controls().autoRotateSpeed = 0.4;
 
+// ---------------------------------------------------------------------------
+// Zoom speed
+// ---------------------------------------------------------------------------
+// globe.gl slows zooming down as you get closer (speed ~ sqrt(altitude)), which
+// feels sluggish near the surface. Instead, make every scroll notch change the
+// camera's height above the ground by the same fraction, whatever the zoom.
+const ZOOM_STEP = 0.3; // each notch moves ~30% of the way to the ground
+
+function updateZoomSpeed() {
+  const a = globe.pointOfView().altitude;
+  // The controls scale the camera's distance from the globe's centre, R(1 + a),
+  // by 0.95^zoomSpeed per notch. Solve for the speed that gives a' = a(1 - step).
+  const scale = (1 + a * (1 - ZOOM_STEP)) / (1 + a);
+  globe.controls().zoomSpeed = Math.log(scale) / Math.log(0.95);
+}
+globe.controls().addEventListener('change', updateZoomSpeed); // runs after globe.gl's own handler
+updateZoomSpeed();
+
+// Badges are clickable HTML on top of the globe, so they'd swallow scroll-wheel
+// events. Pass those on to the globe's canvas so zooming works anywhere.
+document.getElementById('globe').addEventListener('wheel', e => {
+  if (!e.target.closest('.badge-anchor')) return;
+  e.preventDefault();
+  globe.renderer().domElement.dispatchEvent(new WheelEvent('wheel', e));
+}, { passive: false });
+
 // Keep the globe sized to the window.
 window.addEventListener('resize', () => {
   globe.width(window.innerWidth).height(window.innerHeight);
@@ -184,7 +210,7 @@ function zoomToCluster(cluster) {
   const spread = Math.max(...cluster.members.map(r => angularDistance(cluster, r)), 0.02);
   const fit = (pixelsPerDegree() * altitude * spread) / (globe.height() / 3);
   const target = Math.max(0.03, Math.min(altitude / 1.5, fit));
-  globe.pointOfView({ lat: cluster.lat, lng: cluster.lng, altitude: target }, 1200);
+  globe.pointOfView({ lat: cluster.lat, lng: cluster.lng, altitude: target }, 700);
 }
 
 fetch('data/ikon-resorts.json')
