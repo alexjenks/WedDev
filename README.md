@@ -3,9 +3,9 @@
 An interactive 3D globe built with [globe.gl](https://globe.gl/). No build step
 and nothing to install: the library loads from a CDN.
 
-Current step: a wintery topographic globe you can rotate (drag) and zoom (scroll/pinch).
-Next steps: plot OpenSkiMap ski resorts, then show an Open-Meteo snowfall
-forecast when you click one.
+Current step: a wintery topographic globe with a logo badge for every Ikon Pass resort.
+Drag to rotate, scroll/pinch to zoom, hover a badge for the resort's name.
+Next step: show an Open-Meteo snowfall forecast when you click a resort.
 
 ## Run it
 
@@ -27,11 +27,25 @@ will be needed once the page starts loading resort data.)
 |---|---|
 | `index.html` | Page skeleton: loads globe.gl and gives it a full-screen `<div>` to draw in. |
 | `style.css` | Makes the page a full-screen dark canvas with no scrollbars. |
-| `app.js` | Creates the globe, sets the Earth/sky images and starting view, and turns on slow auto-rotation. |
+| `app.js` | Creates the globe (images, starting view, slow spin) and adds a badge for each Ikon resort. |
+| `data/ikon-resorts.json` | The Ikon Pass resorts: name, region, location and website. Edit this to add or remove resorts. |
+| `img/logos/` | Optional logo files, named `<id>.png` after each resort's `id` in the JSON. |
 | `img/earth-winter.jpg` | The winter topographic map the globe uses: snow cover, sea ice, ice-blue palette (generated, see below). |
 | `img/earth-topo.jpg` | A summer-style topographic map (green/brown), kept as an alternative. |
 | `img/earth-topology.png`, `img/earth-water.png`, `img/night-sky.png` | Elevation map, water mask and star background, copied from the [three-globe](https://github.com/vasturiano/three-globe) examples. |
 | `tools/make_topo_texture.py` | Builds both maps from the elevation map: color by height, snow cover, hillshading, contour lines, ice sheets, shaded ocean and a 15° grid. |
+
+## Resort logos
+
+Each badge tries, in order:
+
+1. `img/logos/<id>.png` (your own file, e.g. `img/logos/jackson-hole.png`)
+2. The resort website's icon, via Google's favicon service
+3. The resort's initials
+
+Website icons are often a simplified mark rather than the full logo, so for the
+best look save each resort's logo as a square PNG (128x128 or larger, transparent
+background) in `img/logos/`.
 
 ## Regenerating the topographic map
 

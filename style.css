@@ -1,12 +1,91 @@
-/* Make the page a full-screen black canvas with no scrollbars. */
+/* Single deliberate dark look: a globe in space. */
+:root {
+  --space: #000010;
+  --badge-bg: #ffffff;
+  --badge-ring: #9fd3f5;     /* ice blue */
+  --badge-ink: #1b3550;      /* deep winter navy */
+  --label-bg: rgba(14, 28, 46, 0.92);
+  --label-ink: #eef6fc;
+  --label-muted: #a9c3d8;
+  color-scheme: dark;
+}
+
+/* Make the page a full-screen canvas with no scrollbars. */
 html, body {
   margin: 0;
   height: 100%;
   overflow: hidden;
-  background: #000010;
+  background: var(--space);
+  font: 13px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 #globe {
   position: fixed;
   inset: 0;
+}
+
+/* ---------- Resort badges: a white disc with the logo inside ---------- */
+.badge {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 2px solid var(--badge-ring);
+  border-radius: 50%;
+  background: var(--badge-bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  pointer-events: auto;      /* globe.gl's marker layer ignores the mouse unless we opt in */
+  transition: transform 120ms ease;
+}
+.badge:hover,
+.badge:focus-visible {
+  transform: scale(1.6);
+  outline: none;
+}
+.badge-anchor:hover,
+.badge-anchor:focus-within { z-index: 10; }
+.badge:focus-visible { border-color: var(--badge-ink); }
+
+.badge img {
+  position: absolute;
+  inset: 3px;
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+/* Shown until (or unless) a logo loads. */
+.badge .initials {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--badge-ink);
+}
+.badge.has-logo .initials { visibility: hidden; }
+
+/* Name card that appears beside the badge on hover. */
+.badge-label {
+  position: absolute;
+  left: calc(100% + 6px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.625);  /* undo the badge's 1.6x hover zoom */
+  transform-origin: left center;
+  display: none;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--label-bg);
+  color: var(--label-ink);
+  white-space: nowrap;
+  text-align: left;
+  pointer-events: none;
+}
+.badge-label b { display: block; font-size: 13px; }
+.badge-label small { color: var(--label-muted); font-size: 11px; }
+.badge:hover .badge-label,
+.badge:focus-visible .badge-label { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .badge { transition: none; }
 }
