@@ -3,3 +3,6 @@ data/ski_areas.geojson
 
 # Python bytecode cache
 __pycache__/
+
+# Downloaded terrain tiles (tools/make_detail_patches.py)
+.cache/

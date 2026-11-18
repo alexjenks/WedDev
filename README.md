@@ -32,9 +32,11 @@ will be needed once the page starts loading resort data.)
 | `data/forecasts.json` | Saved 14-day forecast for every resort, used when live requests are blocked. |
 | `data/ikon-resorts.json` | The Ikon Pass resorts: name, region, location and website. Edit this to add or remove resorts. |
 | `img/logos/` | Optional logo files, named `<id>.png` after each resort's `id` in the JSON. |
+| `img/detail/*.jpg`, `data/detail-patches.json` | Sharp (~175 m/pixel) winter maps around each group of resorts, faded in when you zoom close. |
 | `img/earth-winter.jpg` | The winter topographic map the globe uses: snow cover, sea ice, ice-blue palette (generated, see below). |
 | `img/earth-topo.jpg` | A summer-style topographic map (green/brown), kept as an alternative. |
 | `img/earth-topology.png`, `img/earth-water.png`, `img/night-sky.png` | Elevation map, water mask and star background, copied from the [three-globe](https://github.com/vasturiano/three-globe) examples. |
+| `tools/make_detail_patches.py` | Builds the detail patches from AWS Terrain Tiles elevation data. |
 | `tools/fetch_forecasts.py` | Refreshes `data/forecasts.json` from Open-Meteo. |
 | `tools/make_topo_texture.py` | Builds both maps from the elevation map: color by height, snow cover, hillshading, contour lines, ice sheets, shaded ocean and a 15° grid. |
 
@@ -78,6 +80,20 @@ resorts it couldn't find a logo for. Logos are trademarks of their resorts.
 Website icons are often a simplified mark rather than the full logo, so for the
 best look save each resort's logo as a square PNG (128x128 or larger, transparent
 background) in `img/logos/`.
+
+## Sharper close-ups
+
+The main globe image is ~10 km per pixel, so it blurs when you zoom in on a
+resort. Around each group of resorts there's a high-resolution "detail patch"
+(~175 m per pixel) in the same winter style, which fades in as you zoom close.
+Rebuild them after changing the resort list:
+
+```sh
+python3 tools/make_detail_patches.py   # downloads elevation tiles into .cache/
+```
+
+Elevation data: [AWS Terrain Tiles](https://registry.opendata.aws/terrain-tiles/)
+(Mapzen, sourced from SRTM, GMTED, ETOPO1 and others).
 
 ## Regenerating the topographic map
 

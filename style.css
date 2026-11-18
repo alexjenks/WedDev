@@ -114,6 +114,7 @@ html, body {
 }
 
 /* ---------- Forecast panel ---------- */
+#panel[hidden] { display: none; }
 #panel {
   position: fixed;
   top: 16px;

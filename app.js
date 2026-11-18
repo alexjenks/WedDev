@@ -241,6 +241,109 @@ document.getElementById('globe').addEventListener('pointerover', e => {
 });
 
 // ---------------------------------------------------------------------------
+// Sharp detail patches near resorts
+// ---------------------------------------------------------------------------
+// The main map is ~10 km per pixel, so it blurs when you zoom in. Around each
+// group of resorts we have a ~175 m/pixel image (tools/make_detail_patches.py)
+// drawn on top of the globe, faded in as the camera gets close.
+
+const DETAIL_SHOW_BELOW = 0.22; // altitude where patches start fading in
+const DETAIL_FULL_BELOW = 0.1;  // altitude where they're fully visible
+const DETAIL_MAX = 6;           // most patches loaded at once (GPU memory)
+
+let detailPatches = [];
+let detailShownKey = '';
+const detailMaterials = new Map();
+let three = null; // three.js classes, borrowed from the globe's own material
+
+// globe.gl bundles three.js without exposing it, so reuse the classes of the
+// globe's material and texture to build compatible ones.
+function threeClasses() {
+  if (three) return three;
+  const base = globe.globeMaterial();
+  if (!base?.map) return null; // globe image not loaded yet
+  three = { Material: base.constructor, Texture: base.map.constructor, colorSpace: base.map.colorSpace };
+  // One shared alpha mask that feathers each patch's edges into the globe.
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const ctx = c.getContext('2d');
+  const img = ctx.createImageData(128, 128);
+  for (let y = 0; y < 128; y++) for (let x = 0; x < 128; x++) {
+    const d = Math.min(x, y, 127 - x, 127 - y) / 127;  // 0 at edge, 0.5 at centre
+    const t = Math.min(1, d / 0.25);
+    const v = Math.round(255 * t * t * (3 - 2 * t));
+    const i = (y * 128 + x) * 4;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  three.edgeMask = new three.Texture(c);
+  three.edgeMask.needsUpdate = true;
+  return three;
+}
+
+function detailMaterial(patch) {
+  if (detailMaterials.has(patch.id)) return detailMaterials.get(patch.id);
+  const T = threeClasses();
+  const img = new Image();
+  const texture = new T.Texture(img);
+  texture.colorSpace = T.colorSpace;
+  img.onload = () => { texture.needsUpdate = true; material.visible = true; };
+  img.src = patch.file;
+  const material = new T.Material({
+    map: texture, alphaMap: T.edgeMask, transparent: true, opacity: 0, depthWrite: false,
+  });
+  material.visible = false; // until the image arrives
+  detailMaterials.set(patch.id, material);
+  return material;
+}
+
+function updateDetail() {
+  if (!detailPatches.length || !threeClasses()) return;
+  const { lat, lng, altitude } = globe.pointOfView();
+  const fade = Math.min(1, Math.max(0, (DETAIL_SHOW_BELOW - altitude) / (DETAIL_SHOW_BELOW - DETAIL_FULL_BELOW)));
+
+  let shown = [];
+  if (fade > 0) {
+    // Patches near the middle of the view, closest first.
+    const viewRadius = (globe.height() / pixelsPerDegree()) * 0.9;
+    shown = detailPatches
+      .map(p => ({ p, d: angularDistance({ lat, lng }, p) - Math.max(p.width, p.height) / 2 }))
+      .filter(x => x.d < viewRadius)
+      .sort((a, b) => a.d - b.d)
+      .slice(0, DETAIL_MAX)
+      .map(x => x.p);
+  }
+  const key = shown.map(p => p.id).join(',');
+  if (key !== detailShownKey) {
+    detailShownKey = key;
+    shown.forEach(detailMaterial); // create materials before the layer asks for them
+    globe.tilesData(shown);
+    // Free GPU memory for patches that have scrolled well out of view.
+    for (const [id, m] of detailMaterials) {
+      if (!shown.some(p => p.id === id) && detailMaterials.size > DETAIL_MAX * 2) {
+        m.map?.dispose(); m.dispose(); detailMaterials.delete(id);
+      }
+    }
+  }
+  for (const p of shown) detailMaterial(p).opacity = fade;
+}
+
+globe
+  .tileLat('lat').tileLng('lng')
+  .tileWidth('width').tileHeight('height')
+  .tileAltitude(0.0006)
+  .tileCurvatureResolution(0.25)
+  .tilesTransitionDuration(0)
+  .tileMaterial(detailMaterial);
+
+fetch('data/detail-patches.json')
+  .then(r => (r.ok ? r.json() : { patches: [] }))
+  .then(({ patches }) => { detailPatches = patches; updateDetail(); })
+  .catch(() => {});
+globe.onGlobeReady(() => updateDetail());
+globe.controls().addEventListener('change', updateDetail);
+
+// ---------------------------------------------------------------------------
 // Snowfall forecast panel
 // ---------------------------------------------------------------------------
 // Forecasts come from Open-Meteo (free, no key). If the page isn't allowed to

@@ -1,0 +1,594 @@
+{
+ "patches": [
+  {
+   "id": "steamboat",
+   "resorts": [
+    "steamboat"
+   ],
+   "lat": 40.457,
+   "lng": -106.804,
+   "width": 2.6285,
+   "height": 2.0,
+   "file": "img/detail/steamboat.jpg"
+  },
+  {
+   "id": "winter-park",
+   "resorts": [
+    "winter-park",
+    "copper",
+    "eldora",
+    "arapahoe-basin"
+   ],
+   "lat": 39.7195,
+   "lng": -105.867,
+   "width": 2.6488,
+   "height": 2.035,
+   "file": "img/detail/winter-park.jpg"
+  },
+  {
+   "id": "aspen-snowmass",
+   "resorts": [
+    "aspen-snowmass"
+   ],
+   "lat": 39.208,
+   "lng": -106.95,
+   "width": 2.5811,
+   "height": 2.0,
+   "file": "img/detail/aspen-snowmass.jpg"
+  },
+  {
+   "id": "palisades-tahoe",
+   "resorts": [
+    "palisades-tahoe",
+    "sierra-at-tahoe"
+   ],
+   "lat": 38.9985,
+   "lng": -120.1575,
+   "width": 2.5735,
+   "height": 2.0,
+   "file": "img/detail/palisades-tahoe.jpg"
+  },
+  {
+   "id": "mammoth",
+   "resorts": [
+    "mammoth",
+    "june"
+   ],
+   "lat": 37.7095,
+   "lng": -119.0585,
+   "width": 2.5281,
+   "height": 2.0,
+   "file": "img/detail/mammoth.jpg"
+  },
+  {
+   "id": "big-bear",
+   "resorts": [
+    "big-bear",
+    "snow-valley"
+   ],
+   "lat": 34.2305,
+   "lng": -116.963,
+   "width": 2.419,
+   "height": 2.0,
+   "file": "img/detail/big-bear.jpg"
+  },
+  {
+   "id": "crystal",
+   "resorts": [
+    "crystal",
+    "snoqualmie"
+   ],
+   "lat": 47.178,
+   "lng": -121.444,
+   "width": 2.9424,
+   "height": 2.086,
+   "file": "img/detail/crystal.jpg"
+  },
+  {
+   "id": "mt-bachelor",
+   "resorts": [
+    "mt-bachelor"
+   ],
+   "lat": 43.979,
+   "lng": -121.689,
+   "width": 2.7793,
+   "height": 2.0,
+   "file": "img/detail/mt-bachelor.jpg"
+  },
+  {
+   "id": "schweitzer",
+   "resorts": [
+    "schweitzer"
+   ],
+   "lat": 48.368,
+   "lng": -116.623,
+   "width": 3.0105,
+   "height": 2.0,
+   "file": "img/detail/schweitzer.jpg"
+  },
+  {
+   "id": "sun-valley",
+   "resorts": [
+    "sun-valley"
+   ],
+   "lat": 43.672,
+   "lng": -114.364,
+   "width": 2.7651,
+   "height": 2.0,
+   "file": "img/detail/sun-valley.jpg"
+  },
+  {
+   "id": "alyeska",
+   "resorts": [
+    "alyeska"
+   ],
+   "lat": 60.97,
+   "lng": -149.098,
+   "width": 4.1214,
+   "height": 2.0,
+   "file": "img/detail/alyeska.jpg"
+  },
+  {
+   "id": "solitude",
+   "resorts": [
+    "solitude",
+    "brighton",
+    "deer-valley",
+    "alta",
+    "snowbird",
+    "snowbasin"
+   ],
+   "lat": 40.8985,
+   "lng": -111.6675,
+   "width": 2.6383,
+   "height": 2.235,
+   "file": "img/detail/solitude.jpg"
+  },
+  {
+   "id": "jackson-hole",
+   "resorts": [
+    "jackson-hole"
+   ],
+   "lat": 43.587,
+   "lng": -110.828,
+   "width": 2.7612,
+   "height": 2.0,
+   "file": "img/detail/jackson-hole.jpg"
+  },
+  {
+   "id": "big-sky",
+   "resorts": [
+    "big-sky"
+   ],
+   "lat": 45.284,
+   "lng": -111.401,
+   "width": 2.8426,
+   "height": 2.0,
+   "file": "img/detail/big-sky.jpg"
+  },
+  {
+   "id": "taos",
+   "resorts": [
+    "taos"
+   ],
+   "lat": 36.596,
+   "lng": -105.454,
+   "width": 2.4911,
+   "height": 2.0,
+   "file": "img/detail/taos.jpg"
+  },
+  {
+   "id": "boyne-mountain",
+   "resorts": [
+    "boyne-mountain",
+    "the-highlands"
+   ],
+   "lat": 45.317,
+   "lng": -84.9195,
+   "width": 2.8442,
+   "height": 2.0,
+   "file": "img/detail/boyne-mountain.jpg"
+  },
+  {
+   "id": "snowshoe",
+   "resorts": [
+    "snowshoe"
+   ],
+   "lat": 38.41,
+   "lng": -79.994,
+   "width": 2.5524,
+   "height": 2.0,
+   "file": "img/detail/snowshoe.jpg"
+  },
+  {
+   "id": "camelback",
+   "resorts": [
+    "camelback",
+    "blue-mountain-pa"
+   ],
+   "lat": 40.9305,
+   "lng": -75.4355,
+   "width": 2.6472,
+   "height": 2.0,
+   "file": "img/detail/camelback.jpg"
+  },
+  {
+   "id": "killington",
+   "resorts": [
+    "killington",
+    "pico",
+    "sugarbush",
+    "stratton"
+   ],
+   "lat": 43.6245,
+   "lng": -72.8525,
+   "width": 2.7633,
+   "height": 2.623,
+   "file": "img/detail/killington.jpg"
+  },
+  {
+   "id": "loon",
+   "resorts": [
+    "loon",
+    "sunday-river"
+   ],
+   "lat": 44.2545,
+   "lng": -71.239,
+   "width": 2.9979,
+   "height": 2.037,
+   "file": "img/detail/loon.jpg"
+  },
+  {
+   "id": "sugarloaf",
+   "resorts": [
+    "sugarloaf"
+   ],
+   "lat": 45.031,
+   "lng": -70.313,
+   "width": 2.83,
+   "height": 2.0,
+   "file": "img/detail/sugarloaf.jpg"
+  },
+  {
+   "id": "nekoma",
+   "resorts": [
+    "nekoma"
+   ],
+   "lat": 47.663,
+   "lng": -90.716,
+   "width": 2.9696,
+   "height": 2.0,
+   "file": "img/detail/nekoma.jpg"
+  },
+  {
+   "id": "panorama",
+   "resorts": [
+    "panorama"
+   ],
+   "lat": 50.46,
+   "lng": -116.24,
+   "width": 3.1416,
+   "height": 2.0,
+   "file": "img/detail/panorama.jpg"
+  },
+  {
+   "id": "sun-peaks",
+   "resorts": [
+    "sun-peaks"
+   ],
+   "lat": 50.884,
+   "lng": -119.885,
+   "width": 3.1701,
+   "height": 2.0,
+   "file": "img/detail/sun-peaks.jpg"
+  },
+  {
+   "id": "mike-wiegele",
+   "resorts": [
+    "mike-wiegele"
+   ],
+   "lat": 52.105,
+   "lng": -119.297,
+   "width": 3.2562,
+   "height": 2.0,
+   "file": "img/detail/mike-wiegele.jpg"
+  },
+  {
+   "id": "cmh",
+   "resorts": [
+    "cmh",
+    "revelstoke"
+   ],
+   "lat": 50.929,
+   "lng": -117.7315,
+   "width": 3.4015,
+   "height": 2.0,
+   "file": "img/detail/cmh.jpg"
+  },
+  {
+   "id": "tremblant",
+   "resorts": [
+    "tremblant"
+   ],
+   "lat": 46.21,
+   "lng": -74.585,
+   "width": 2.8901,
+   "height": 2.0,
+   "file": "img/detail/tremblant.jpg"
+  },
+  {
+   "id": "le-massif",
+   "resorts": [
+    "le-massif"
+   ],
+   "lat": 47.284,
+   "lng": -70.571,
+   "width": 2.9483,
+   "height": 2.0,
+   "file": "img/detail/le-massif.jpg"
+  },
+  {
+   "id": "blue-mountain",
+   "resorts": [
+    "blue-mountain"
+   ],
+   "lat": 44.501,
+   "lng": -80.316,
+   "width": 2.8041,
+   "height": 2.0,
+   "file": "img/detail/blue-mountain.jpg"
+  },
+  {
+   "id": "lake-louise",
+   "resorts": [
+    "lake-louise",
+    "sunshine",
+    "norquay"
+   ],
+   "lat": 51.278,
+   "lng": -115.8795,
+   "width": 3.1955,
+   "height": 2.0,
+   "file": "img/detail/lake-louise.jpg"
+  },
+  {
+   "id": "red-mountain",
+   "resorts": [
+    "red-mountain"
+   ],
+   "lat": 49.105,
+   "lng": -117.846,
+   "width": 3.055,
+   "height": 2.0,
+   "file": "img/detail/red-mountain.jpg"
+  },
+  {
+   "id": "cypress",
+   "resorts": [
+    "cypress"
+   ],
+   "lat": 49.396,
+   "lng": -123.204,
+   "width": 3.073,
+   "height": 2.0,
+   "file": "img/detail/cypress.jpg"
+  },
+  {
+   "id": "valle-nevado",
+   "resorts": [
+    "valle-nevado"
+   ],
+   "lat": -33.355,
+   "lng": -70.249,
+   "width": 2.3944,
+   "height": 2.0,
+   "file": "img/detail/valle-nevado.jpg"
+  },
+  {
+   "id": "thredbo",
+   "resorts": [
+    "thredbo"
+   ],
+   "lat": -36.505,
+   "lng": 148.306,
+   "width": 2.4882,
+   "height": 2.0,
+   "file": "img/detail/thredbo.jpg"
+  },
+  {
+   "id": "mt-buller",
+   "resorts": [
+    "mt-buller"
+   ],
+   "lat": -37.146,
+   "lng": 146.437,
+   "width": 2.5091,
+   "height": 2.0,
+   "file": "img/detail/mt-buller.jpg"
+  },
+  {
+   "id": "coronet-peak",
+   "resorts": [
+    "coronet-peak",
+    "remarkables"
+   ],
+   "lat": -45.0675,
+   "lng": 168.771,
+   "width": 2.8318,
+   "height": 2.0,
+   "file": "img/detail/coronet-peak.jpg"
+  },
+  {
+   "id": "mt-hutt",
+   "resorts": [
+    "mt-hutt"
+   ],
+   "lat": -43.47,
+   "lng": 171.53,
+   "width": 2.7558,
+   "height": 2.0,
+   "file": "img/detail/mt-hutt.jpg"
+  },
+  {
+   "id": "niseko",
+   "resorts": [
+    "niseko"
+   ],
+   "lat": 42.862,
+   "lng": 140.698,
+   "width": 2.7285,
+   "height": 2.0,
+   "file": "img/detail/niseko.jpg"
+  },
+  {
+   "id": "lotte-arai",
+   "resorts": [
+    "lotte-arai",
+    "shiga-kogen",
+    "madarao",
+    "myoko-suginohara"
+   ],
+   "lat": 36.85,
+   "lng": 138.3235,
+   "width": 2.4996,
+   "height": 2.0,
+   "file": "img/detail/lotte-arai.jpg"
+  },
+  {
+   "id": "appi",
+   "resorts": [
+    "appi"
+   ],
+   "lat": 40.003,
+   "lng": 140.958,
+   "width": 2.6109,
+   "height": 2.0,
+   "file": "img/detail/appi.jpg"
+  },
+  {
+   "id": "furano",
+   "resorts": [
+    "furano"
+   ],
+   "lat": 43.333,
+   "lng": 142.355,
+   "width": 2.7496,
+   "height": 2.0,
+   "file": "img/detail/furano.jpg"
+  },
+  {
+   "id": "zao-onsen",
+   "resorts": [
+    "zao-onsen"
+   ],
+   "lat": 38.166,
+   "lng": 140.41,
+   "width": 2.5438,
+   "height": 2.0,
+   "file": "img/detail/zao-onsen.jpg"
+  },
+  {
+   "id": "mona-yongpyong",
+   "resorts": [
+    "mona-yongpyong"
+   ],
+   "lat": 37.645,
+   "lng": 128.68,
+   "width": 2.5259,
+   "height": 2.0,
+   "file": "img/detail/mona-yongpyong.jpg"
+  },
+  {
+   "id": "beidahu",
+   "resorts": [
+    "beidahu",
+    "lake-songhua"
+   ],
+   "lat": 43.56,
+   "lng": 126.625,
+   "width": 2.7599,
+   "height": 2.0,
+   "file": "img/detail/beidahu.jpg"
+  },
+  {
+   "id": "yunding",
+   "resorts": [
+    "yunding"
+   ],
+   "lat": 40.955,
+   "lng": 115.41,
+   "width": 2.6482,
+   "height": 2.0,
+   "file": "img/detail/yunding.jpg"
+  },
+  {
+   "id": "zermatt",
+   "resorts": [
+    "zermatt",
+    "valle-daosta"
+   ],
+   "lat": 45.8805,
+   "lng": 7.5345,
+   "width": 2.8729,
+   "height": 2.0,
+   "file": "img/detail/zermatt.jpg"
+  },
+  {
+   "id": "kitzbuehel",
+   "resorts": [
+    "kitzbuehel"
+   ],
+   "lat": 47.446,
+   "lng": 12.392,
+   "width": 2.9573,
+   "height": 2.0,
+   "file": "img/detail/kitzbuehel.jpg"
+  },
+  {
+   "id": "dolomiti-superski",
+   "resorts": [
+    "dolomiti-superski"
+   ],
+   "lat": 46.53,
+   "lng": 11.8,
+   "width": 2.9071,
+   "height": 2.0,
+   "file": "img/detail/dolomiti-superski.jpg"
+  },
+  {
+   "id": "chamonix",
+   "resorts": [
+    "chamonix",
+    "megeve"
+   ],
+   "lat": 45.8905,
+   "lng": 6.7435,
+   "width": 2.8734,
+   "height": 2.0,
+   "file": "img/detail/chamonix.jpg"
+  },
+  {
+   "id": "grandvalira",
+   "resorts": [
+    "grandvalira"
+   ],
+   "lat": 42.553,
+   "lng": 1.661,
+   "width": 2.715,
+   "height": 2.0,
+   "file": "img/detail/grandvalira.jpg"
+  },
+  {
+   "id": "ischgl",
+   "resorts": [
+    "ischgl",
+    "st-moritz"
+   ],
+   "lat": 46.755,
+   "lng": 10.065,
+   "width": 2.9192,
+   "height": 2.114,
+   "file": "img/detail/ischgl.jpg"
+  }
+ ]
+}
