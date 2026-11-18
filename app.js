@@ -29,8 +29,8 @@ window.addEventListener('resize', () => {
 // the next, and if they all fail the badge shows the resort's initials.
 const logoSources = resort => [
   `img/logos/${resort.id}.png`,                                             // your own logo file, if you add one
-  `https://www.google.com/s2/favicons?domain=${resort.domain}&sz=128`,      // the resort website's icon
-];
+  resort.domain && `https://www.google.com/s2/favicons?domain=${resort.domain}&sz=128`, // the resort website's icon
+].filter(Boolean);
 
 function makeBadge(resort) {
   const el = document.createElement('button');

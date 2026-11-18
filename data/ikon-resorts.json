@@ -1,5 +1,5 @@
 {
-  "_note": "Ikon Pass destinations (compiled Nov 2026 from memory of the 2025/26 lineup; check ikonpass.com for changes). lat/lng are approximate base areas. 'domain' is the resort's website, used to fetch its icon. 'wiki' is its English Wikipedia article, used by tools/fetch_logos.py. Put a logo file at img/logos/<id>.png to override the icon.",
+  "_note": "Ikon Pass destinations (checked against the ikonpass.com sitemap on 18 Nov 2026; Mt.T (Japan) is not included because its location is unconfirmed). lat/lng are approximate base areas. 'domain' is the resort's website, used to fetch its icon. 'wiki' is its English Wikipedia article, used by tools/fetch_logos.py. Put a logo file at img/logos/<id>.png to override the icon.",
   "resorts": [
     { "id": "steamboat", "name": "Steamboat", "region": "Colorado, USA", "lat": 40.457, "lng": -106.804, "domain": "steamboat.com", "wiki": "Steamboat Ski Resort" },
     { "id": "winter-park", "name": "Winter Park", "region": "Colorado, USA", "lat": 39.886, "lng": -105.762, "domain": "winterparkresort.com", "wiki": "Winter Park Resort" },
@@ -44,6 +44,14 @@
     { "id": "sunday-river", "name": "Sunday River", "region": "Maine, USA", "lat": 44.473, "lng": -70.857, "domain": "sundayriver.com", "wiki": "Sunday River (ski resort)" },
     { "id": "sugarloaf", "name": "Sugarloaf", "region": "Maine, USA", "lat": 45.031, "lng": -70.313, "domain": "sugarloaf.com", "wiki": "Sugarloaf (ski resort)" },
 
+    { "id": "sierra-at-tahoe", "name": "Sierra-at-Tahoe", "region": "California, USA", "lat": 38.8, "lng": -120.08, "domain": "sierraattahoe.com", "wiki": "Sierra-at-Tahoe" },
+    { "id": "blue-mountain-pa", "name": "Blue Mountain Resort", "region": "Pennsylvania, USA", "lat": 40.81, "lng": -75.515, "domain": "skibluemt.com", "wiki": "Blue Mountain Ski Area" },
+    { "id": "nekoma", "name": "Nekoma Mountain", "region": "Minnesota, USA", "lat": 47.663, "lng": -90.716, "domain": null, "wiki": "Lutsen Mountains" },
+    { "id": "panorama", "name": "Panorama", "region": "British Columbia, Canada", "lat": 50.46, "lng": -116.24, "domain": "panoramaresort.com", "wiki": "Panorama Mountain Resort" },
+    { "id": "sun-peaks", "name": "Sun Peaks Resort", "region": "British Columbia, Canada", "lat": 50.884, "lng": -119.885, "domain": "sunpeaksresort.com", "wiki": "Sun Peaks Resort" },
+    { "id": "mike-wiegele", "name": "Mike Wiegele Heli-Skiing", "region": "British Columbia, Canada", "lat": 52.105, "lng": -119.297, "domain": "wiegele.com", "wiki": "Mike Wiegele Helicopter Skiing" },
+    { "id": "cmh", "name": "CMH Heli-Skiing", "region": "British Columbia, Canada", "lat": 50.9, "lng": -117.3, "domain": "cmhheli.com", "wiki": "Canadian Mountain Holidays" },
+
     { "id": "tremblant", "name": "Tremblant", "region": "Quebec, Canada", "lat": 46.210, "lng": -74.585, "domain": "tremblant.ca", "wiki": "Mont Tremblant Resort" },
     { "id": "le-massif", "name": "Le Massif de Charlevoix", "region": "Quebec, Canada", "lat": 47.284, "lng": -70.571, "domain": "lemassif.com", "wiki": "Le Massif" },
     { "id": "blue-mountain", "name": "Blue Mountain", "region": "Ontario, Canada", "lat": 44.501, "lng": -80.316, "domain": "bluemountain.ca", "wiki": "Blue Mountain (ski resort)" },
@@ -64,10 +72,26 @@
     { "id": "niseko", "name": "Niseko United", "region": "Hokkaido, Japan", "lat": 42.862, "lng": 140.698, "domain": "niseko.ne.jp", "wiki": "Niseko United" },
     { "id": "lotte-arai", "name": "Lotte Arai Resort", "region": "Niigata, Japan", "lat": 36.990, "lng": 138.190, "domain": "lottearai-resort.com", "wiki": "Lotte Arai Resort" },
 
+    { "id": "appi", "name": "APPI Resort", "region": "Iwate, Japan", "lat": 40.003, "lng": 140.958, "domain": "appi-japan.com", "wiki": "Appi Kogen" },
+    { "id": "furano", "name": "Furano Ski Resort", "region": "Hokkaido, Japan", "lat": 43.333, "lng": 142.355, "domain": "princehotels.com", "wiki": "Furano Ski Resort" },
+    { "id": "zao-onsen", "name": "Zao Onsen Ski Resort", "region": "Yamagata, Japan", "lat": 38.166, "lng": 140.41, "domain": "zao-ski.or.jp", "wiki": "Zaō Onsen" },
+    { "id": "shiga-kogen", "name": "Shiga Kogen Mountain Resort", "region": "Nagano, Japan", "lat": 36.71, "lng": 138.51, "domain": "shigakogen-ski.org", "wiki": "Shiga Kogen" },
+    { "id": "madarao", "name": "Madarao Mountain Resort", "region": "Nagano, Japan", "lat": 36.856, "lng": 138.296, "domain": "madarao.jp", "wiki": "Madarao Kogen" },
+    { "id": "myoko-suginohara", "name": "Myoko Suginohara Ski Resort", "region": "Niigata, Japan", "lat": 36.877, "lng": 138.137, "domain": "princehotels.com", "wiki": "Myōkō Kōgen" },
+
+    { "id": "mona-yongpyong", "name": "Mona Yongpyong", "region": "Gangwon, South Korea", "lat": 37.645, "lng": 128.68, "domain": "yongpyong.co.kr", "wiki": "Yongpyong Resort" },
+    { "id": "beidahu", "name": "Beidahu Ski Resort", "region": "Jilin, China", "lat": 43.42, "lng": 126.61, "domain": null, "wiki": "Beidahu Ski Resort" },
+    { "id": "lake-songhua", "name": "Lake Songhua Resort", "region": "Jilin, China", "lat": 43.7, "lng": 126.64, "domain": null, "wiki": "Lake Songhua Resort" },
+    { "id": "yunding", "name": "Yunding Snow Park", "region": "Hebei, China", "lat": 40.955, "lng": 115.41, "domain": null, "wiki": "Genting Snow Park" },
+
     { "id": "zermatt", "name": "Zermatt Matterhorn", "region": "Switzerland", "lat": 46.024, "lng": 7.749, "domain": "zermatt.ch", "wiki": "Zermatt" },
     { "id": "kitzbuehel", "name": "Kitzbühel", "region": "Austria", "lat": 47.446, "lng": 12.392, "domain": "kitzski.at", "wiki": "Kitzbühel" },
     { "id": "dolomiti-superski", "name": "Dolomiti Superski", "region": "Italy", "lat": 46.530, "lng": 11.800, "domain": "dolomitisuperski.com", "wiki": "Dolomiti Superski" },
     { "id": "chamonix", "name": "Chamonix Mont-Blanc", "region": "France", "lat": 45.924, "lng": 6.870, "domain": "chamonix.com", "wiki": "Chamonix" },
-    { "id": "grandvalira", "name": "Grandvalira", "region": "Andorra", "lat": 42.553, "lng": 1.661, "domain": "grandvalira.com", "wiki": "Grandvalira" }
+    { "id": "grandvalira", "name": "Grandvalira", "region": "Andorra", "lat": 42.553, "lng": 1.661, "domain": "grandvalira.com", "wiki": "Grandvalira" },
+    { "id": "ischgl", "name": "Ischgl", "region": "Austria", "lat": 47.012, "lng": 10.292, "domain": "ischgl.com", "wiki": "Ischgl" },
+    { "id": "st-moritz", "name": "St. Moritz", "region": "Switzerland", "lat": 46.498, "lng": 9.838, "domain": "stmoritz.com", "wiki": "St. Moritz" },
+    { "id": "megeve", "name": "Megève Ski Area", "region": "France", "lat": 45.857, "lng": 6.617, "domain": "megeve.com", "wiki": "Megève" },
+    { "id": "valle-daosta", "name": "Valle d'Aosta", "region": "Italy", "lat": 45.737, "lng": 7.32, "domain": "lovevda.it", "wiki": "Aosta Valley" }
   ]
 }
