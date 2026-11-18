@@ -1,2 +1,5 @@
 # Local copy of the OpenSkiMap export (large; download it yourself, see README)
 data/ski_areas.geojson
+
+# Python bytecode cache
+__pycache__/
