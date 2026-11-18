@@ -11,6 +11,31 @@
 <body>
   <!-- The globe renders into this div and fills the window. -->
   <div id="globe"></div>
+
+  <!-- Forecast panel: filled in by app.js when a resort badge is clicked. -->
+  <aside id="panel" hidden aria-labelledby="panel-name">
+    <header class="panel-head">
+      <div class="panel-logo" id="panel-logo"></div>
+      <div class="panel-title">
+        <h2 id="panel-name"></h2>
+        <p id="panel-region"></p>
+      </div>
+      <button id="panel-close" class="icon-btn" aria-label="Close forecast">×</button>
+    </header>
+
+    <div class="panel-toolbar">
+      <span class="eyebrow">14-day snowfall</span>
+      <div class="units" role="group" aria-label="Units">
+        <button id="unit-in" type="button">in</button>
+        <button id="unit-cm" type="button">cm</button>
+      </div>
+    </div>
+
+    <div id="forecast" aria-live="polite"></div>
+
+    <p id="panel-source" class="panel-source"></p>
+  </aside>
+
   <script src="app.js"></script>
 </body>
 </html>

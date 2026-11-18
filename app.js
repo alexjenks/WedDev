@@ -1,6 +1,7 @@
 // A wintery topographic globe with a logo badge for every Ikon Pass resort.
 // Drag to rotate, scroll (or pinch) to zoom, hover a badge to see its name.
 // Nearby resorts merge into a numbered bubble when zoomed out; click it to zoom in.
+// Click a resort for its 14-day snowfall forecast.
 
 const globe = Globe()(document.getElementById('globe'))
   .globeImageUrl('img/earth-winter.jpg')       // our wintery topographic map (see tools/make_topo_texture.py)
@@ -61,6 +62,8 @@ function makeBadge(resort) {
   label.querySelector('small').textContent = resort.region;
   el.append(label);
 
+  el.dataset.id = resort.id;
+  el.addEventListener('click', () => openForecast(resort));
   return wrapInAnchor(el);
 }
 
@@ -210,3 +213,280 @@ globe.controls().addEventListener('change', () => {
 document.getElementById('globe').addEventListener('pointerover', e => {
   if (e.target.closest('.badge')) globe.controls().autoRotate = false;
 });
+
+// ---------------------------------------------------------------------------
+// Snowfall forecast panel
+// ---------------------------------------------------------------------------
+// Forecasts come from Open-Meteo (free, no key). If the page isn't allowed to
+// call it (the claude.ai preview blocks outside requests), we fall back to the
+// snapshot in data/forecasts.json made by tools/fetch_forecasts.py.
+
+const FORECAST_DAYS = 14;
+const CERTAIN_DAYS = 7;   // forecasts beyond this many days are much less reliable
+const FORECAST_PARAMS = {
+  daily: 'snowfall_sum,temperature_2m_max,temperature_2m_min,weather_code',
+  timezone: 'auto',
+  forecast_days: FORECAST_DAYS,
+};
+
+const panel = document.getElementById('panel');
+const forecastEl = document.getElementById('forecast');
+const liveCache = new Map();
+let snapshotPromise = null;
+let currentResort = null;
+let currentForecast = null;
+let requestId = 0;
+
+// Units: inches/°F by default in the US, cm/°C elsewhere; remembered per browser.
+let units = (navigator.language || '').toLowerCase() === 'en-us' ? 'in' : 'cm';
+try { units = localStorage.getItem('ski-globe-units') || units; } catch {}
+
+async function fetchLive(resort) {
+  if (liveCache.has(resort.id)) return liveCache.get(resort.id);
+  const params = new URLSearchParams({ latitude: resort.lat, longitude: resort.lng, ...FORECAST_PARAMS });
+  const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+  if (!res.ok) throw new Error(`Open-Meteo answered ${res.status}`);
+  const data = await res.json();
+  const forecast = { daily: data.daily, elevation: data.elevation, live: true, fetchedAt: new Date() };
+  liveCache.set(resort.id, forecast);
+  return forecast;
+}
+
+async function fetchSnapshot(resort) {
+  snapshotPromise ??= fetch('data/forecasts.json').then(r => (r.ok ? r.json() : null)).catch(() => null);
+  const snap = await snapshotPromise;
+  const f = snap?.resorts?.[resort.id];
+  if (!f) throw new Error('No forecast available for this resort.');
+  return { daily: f.daily, elevation: f.elevation, live: false, fetchedAt: new Date(snap.generated_at) };
+}
+
+async function getForecast(resort) {
+  try {
+    return await fetchLive(resort);
+  } catch (err) {
+    console.info('Live forecast unavailable, using saved snapshot:', err.message);
+    return fetchSnapshot(resort);
+  }
+}
+
+async function openForecast(resort) {
+  const id = ++requestId;
+  currentResort = resort;
+  currentForecast = null;
+  globe.controls().autoRotate = false;
+
+  document.querySelectorAll('.badge.selected').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`.badge[data-id="${CSS.escape(resort.id)}"]`)?.classList.add('selected');
+
+  // Header: logo (or initials), name, region.
+  const logo = document.getElementById('panel-logo');
+  logo.textContent = '';
+  const badgeImg = document.querySelector(`.badge[data-id="${CSS.escape(resort.id)}"].has-logo img`);
+  if (badgeImg) {
+    const img = document.createElement('img');
+    img.src = badgeImg.src;
+    img.alt = '';
+    logo.append(img);
+  } else {
+    logo.textContent = initialsFor(resort.name);
+  }
+  document.getElementById('panel-name').textContent = resort.name;
+  document.getElementById('panel-region').textContent = resort.region;
+  document.getElementById('panel-source').textContent = '';
+  forecastEl.innerHTML = '<p class="panel-msg">Loading forecast…</p>';
+  panel.hidden = false;
+
+  try {
+    const forecast = await getForecast(resort);
+    if (id !== requestId) return; // a different resort was clicked meanwhile
+    currentForecast = forecast;
+    renderForecast();
+  } catch (err) {
+    if (id !== requestId) return;
+    forecastEl.innerHTML = '';
+    const p = document.createElement('p');
+    p.className = 'panel-msg error';
+    p.textContent = `Couldn't load a forecast: ${err.message}`;
+    forecastEl.append(p);
+  }
+}
+
+function initialsFor(name) {
+  return name.replace(/^(The|Mt\.?|Mount)\s+/i, '')
+    .split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+// --- Formatting helpers ------------------------------------------------------
+const snowIn = cm => (units === 'in' ? cm / 2.54 : cm);
+const unitLabel = () => (units === 'in' ? 'in' : 'cm');
+function fmtSnow(cm, { withUnit = false } = {}) {
+  const v = snowIn(cm ?? 0);
+  const text = v === 0 ? '0' : v < 10 ? v.toFixed(1) : Math.round(v).toString();
+  return withUnit ? `${text} ${unitLabel()}` : text;
+}
+const fmtTemp = c => (c == null ? '–' : `${Math.round(units === 'in' ? c * 9 / 5 + 32 : c)}°`);
+
+// WMO weather codes used by Open-Meteo, shortened.
+function describeWeather(code) {
+  if (code == null) return '';
+  if (code === 0) return 'Clear';
+  if (code <= 2) return 'Partly cloudy';
+  if (code === 3) return 'Overcast';
+  if (code <= 48) return 'Fog';
+  if (code <= 57) return 'Drizzle';
+  if (code <= 67) return 'Rain';
+  if (code <= 77) return code === 77 ? 'Snow grains' : 'Snow';
+  if (code <= 82) return 'Rain showers';
+  if (code <= 86) return 'Snow showers';
+  return 'Thunderstorms';
+}
+
+function parseDay(iso) {
+  // Dates arrive as YYYY-MM-DD in the resort's own time zone; build a local date
+  // from the parts so they don't shift a day in the viewer's time zone.
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+// --- Rendering ----------------------------------------------------------------
+function renderForecast() {
+  const f = currentForecast;
+  if (!f) return;
+  const days = f.daily.time.map((iso, i) => ({
+    date: parseDay(iso),
+    snow: f.daily.snowfall_sum[i] ?? 0,
+    hi: f.daily.temperature_2m_max[i],
+    lo: f.daily.temperature_2m_min[i],
+    code: f.daily.weather_code?.[i],
+    far: i >= CERTAIN_DAYS,
+  }));
+  const total7 = days.slice(0, CERTAIN_DAYS).reduce((s, d) => s + d.snow, 0);
+  const total14 = days.reduce((s, d) => s + d.snow, 0);
+  const max = Math.max(...days.map(d => d.snow));
+  const scaleMax = Math.max(max, units === 'in' ? 2.54 * 2 : 5); // keep light snow looking light
+  const peakIndex = max > 0 ? days.findIndex(d => d.snow === max) : -1;
+
+  forecastEl.innerHTML = '';
+
+  // Totals
+  const totals = document.createElement('div');
+  totals.className = 'totals';
+  for (const [label, value] of [['Next 7 days', total7], [`Next ${days.length} days`, total14]]) {
+    const t = document.createElement('div');
+    t.className = 'total';
+    t.innerHTML = `<div class="num"></div><div class="lbl"></div>`;
+    t.querySelector('.num').innerHTML = `${fmtSnow(value)}<small>${unitLabel()}</small>`;
+    t.querySelector('.lbl').textContent = label;
+    totals.append(t);
+  }
+  forecastEl.append(totals);
+
+  // Chart
+  const chart = document.createElement('div');
+  chart.className = 'chart';
+  const bars = document.createElement('div');
+  bars.className = 'bars';
+  const axis = document.createElement('div');
+  axis.className = 'axis';
+  axis.setAttribute('aria-hidden', 'true');
+  const detail = document.createElement('div');
+  detail.className = 'day-detail';
+
+  const describe = d => {
+    const date = d.date.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+    return `<b>${date}</b> · ${fmtSnow(d.snow, { withUnit: true })} snow · ` +
+      `${fmtTemp(d.lo)} / ${fmtTemp(d.hi)} · ${describeWeather(d.code)}` +
+      (d.far ? ' · <i>less certain</i>' : '');
+  };
+  const defaultDetail = peakIndex >= 0
+    ? `Most snow: ${describe(days[peakIndex])}`
+    : 'No snow in the forecast for the next two weeks.';
+  detail.innerHTML = defaultDetail;
+
+  days.forEach((d, i) => {
+    const col = document.createElement('button');
+    col.type = 'button';
+    col.className = 'day' + (d.far ? ' far' : '') + (i === peakIndex ? ' peak' : '');
+    col.setAttribute('aria-label', describe(d).replace(/<[^>]+>/g, ''));
+    if (d.snow > 0) {
+      const val = document.createElement('span');
+      val.className = 'val';
+      val.textContent = fmtSnow(d.snow);
+      col.append(val);
+      const bar = document.createElement('span');
+      bar.className = 'bar';
+      bar.style.height = `${Math.max(2, (d.snow / scaleMax) * 128)}px`;
+      col.append(bar);
+    }
+    const show = () => { detail.innerHTML = describe(d); };
+    col.addEventListener('pointerenter', show);
+    col.addEventListener('focus', show);
+    col.addEventListener('pointerleave', () => { detail.innerHTML = defaultDetail; });
+    col.addEventListener('blur', () => { detail.innerHTML = defaultDetail; });
+    bars.append(col);
+
+    const tick = document.createElement('div');
+    const dow = d.date.getDay();
+    if (dow === 0 || dow === 6) tick.className = 'weekend';
+    tick.innerHTML = `<b>${d.date.toLocaleDateString(undefined, { weekday: 'narrow' })}</b>${d.date.getDate()}`;
+    axis.append(tick);
+  });
+
+  chart.append(bars, axis);
+  const key = document.createElement('div');
+  key.className = 'chart-key';
+  key.innerHTML = `<span><i style="background:var(--snow)"></i>Days 1–${CERTAIN_DAYS}</span>` +
+    `<span><i style="background:var(--snow-far)"></i>Days ${CERTAIN_DAYS + 1}–${days.length}, less certain</span>`;
+  chart.append(key);
+  forecastEl.append(chart, detail);
+
+  // Table view of the same numbers
+  const details = document.createElement('details');
+  details.className = 'table-view';
+  details.innerHTML = `<summary>Show as table</summary>
+    <table><thead><tr><th>Day</th><th>Snow (${unitLabel()})</th><th>Low</th><th>High</th><th>Conditions</th></tr></thead><tbody></tbody></table>`;
+  const tbody = details.querySelector('tbody');
+  for (const d of days) {
+    const tr = document.createElement('tr');
+    for (const text of [
+      d.date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' }),
+      fmtSnow(d.snow), fmtTemp(d.lo), fmtTemp(d.hi), describeWeather(d.code),
+    ]) {
+      const td = document.createElement('td');
+      td.textContent = text;
+      tr.append(td);
+    }
+    tbody.append(tr);
+  }
+  forecastEl.append(details);
+
+  // Source line
+  const when = f.fetchedAt.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  const elev = f.elevation != null
+    ? ` at ${units === 'in' ? Math.round(f.elevation * 3.281).toLocaleString() + ' ft' : Math.round(f.elevation).toLocaleString() + ' m'}`
+    : '';
+  document.getElementById('panel-source').innerHTML =
+    `Forecast${elev} from <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>, ` +
+    (f.live ? `updated ${when}.` : `saved snapshot from ${when}.`) +
+    ' Mountain snowfall varies a lot with elevation; treat these as estimates.';
+}
+
+// --- Panel controls ---------------------------------------------------------------
+function closePanel() {
+  panel.hidden = true;
+  requestId++;
+  document.querySelectorAll('.badge.selected').forEach(b => b.classList.remove('selected'));
+}
+document.getElementById('panel-close').addEventListener('click', closePanel);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) closePanel(); });
+
+function setUnits(u) {
+  units = u;
+  try { localStorage.setItem('ski-globe-units', u); } catch {}
+  document.getElementById('unit-in').setAttribute('aria-pressed', String(u === 'in'));
+  document.getElementById('unit-cm').setAttribute('aria-pressed', String(u === 'cm'));
+  renderForecast();
+}
+document.getElementById('unit-in').addEventListener('click', () => setUnits('in'));
+document.getElementById('unit-cm').addEventListener('click', () => setUnits('cm'));
+setUnits(units);

@@ -7,6 +7,13 @@
   --label-bg: rgba(14, 28, 46, 0.92);
   --label-ink: #eef6fc;
   --label-muted: #a9c3d8;
+  --panel-bg: rgba(11, 22, 38, 0.95);
+  --panel-line: rgba(159, 211, 245, 0.18);
+  --ink: #eef6fc;
+  --ink-muted: #a9c3d8;
+  --ink-faint: #7f98ad;
+  --snow: #9fd3f5;           /* snowfall bars: same ice blue as the badge ring */
+  --snow-far: rgba(159, 211, 245, 0.42); /* days 8-14, less certain */
   color-scheme: dark;
 }
 
@@ -104,4 +111,180 @@ html, body {
 
 @media (prefers-reduced-motion: reduce) {
   .badge { transition: none; }
+}
+
+/* ---------- Forecast panel ---------- */
+#panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: min(400px, calc(100vw - 32px));
+  max-height: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  overflow-y: auto;
+  border: 1px solid var(--panel-line);
+  border-radius: 14px;
+  background: var(--panel-bg);
+  color: var(--ink);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+}
+
+.panel-head { display: flex; align-items: center; gap: 12px; }
+.panel-logo {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--badge-ring);
+  border-radius: 50%;
+  background: var(--badge-bg);
+  color: var(--badge-ink);
+  font-weight: 700;
+  overflow: hidden;
+}
+.panel-logo img { width: 86%; height: 86%; object-fit: contain; }
+.panel-title { min-width: 0; flex: 1; }
+.panel-title h2 { margin: 0; font-size: 19px; line-height: 1.2; text-wrap: balance; }
+.panel-title p { margin: 2px 0 0; color: var(--ink-muted); }
+
+.icon-btn {
+  align-self: flex-start;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.icon-btn:hover, .icon-btn:focus-visible { background: var(--panel-line); outline: none; }
+
+.panel-toolbar { display: flex; align-items: center; justify-content: space-between; }
+.eyebrow {
+  color: var(--ink-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.units { display: flex; border: 1px solid var(--panel-line); border-radius: 8px; overflow: hidden; }
+.units button {
+  padding: 4px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.units button[aria-pressed="true"] { background: var(--panel-line); color: var(--ink); font-weight: 600; }
+.units button:focus-visible { outline: 2px solid var(--snow); outline-offset: -2px; }
+
+/* Totals */
+.totals { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.total {
+  padding: 10px 12px;
+  border: 1px solid var(--panel-line);
+  border-radius: 10px;
+}
+.total .num { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.total .num small { margin-left: 3px; font-size: 13px; font-weight: 500; color: var(--ink-muted); }
+.total .lbl { color: var(--ink-muted); font-size: 12px; }
+
+/* Bar chart: 14 columns, bars grow up from a shared baseline */
+.chart { position: relative; }
+.bars {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 2px;
+  height: 150px;
+  align-items: end;
+  border-bottom: 1px solid var(--ink-faint);
+}
+.day {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: default;
+}
+.day:hover, .day:focus-visible { background: rgba(159, 211, 245, 0.08); outline: none; border-radius: 4px 4px 0 0; }
+.day .val { font-size: 10px; color: var(--ink-muted); font-variant-numeric: tabular-nums; margin-bottom: 2px; }
+.day .bar {
+  width: 70%;
+  max-width: 16px;
+  border-radius: 4px 4px 0 0;
+  background: var(--snow);
+}
+.day.far .bar { background: var(--snow-far); }
+.day.peak .val { color: var(--ink); font-weight: 700; }
+
+.axis {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 2px;
+  margin-top: 4px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--ink-faint);
+  line-height: 1.25;
+}
+.axis b { display: block; color: var(--ink-muted); font-weight: 600; }
+.axis .weekend b { color: var(--ink); }
+
+.chart-key { display: flex; gap: 14px; margin-top: 8px; font-size: 11px; color: var(--ink-muted); }
+.chart-key i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 2px; vertical-align: -1px; }
+
+/* Hover / focus detail for one day */
+.day-detail {
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(159, 211, 245, 0.07);
+  color: var(--ink-muted);
+  font-size: 12px;
+}
+.day-detail b { color: var(--ink); }
+
+/* Table view */
+details.table-view summary { cursor: pointer; color: var(--ink-muted); font-size: 12px; }
+details.table-view table { width: 100%; margin-top: 8px; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+details.table-view th, details.table-view td { padding: 4px 6px; text-align: right; border-bottom: 1px solid var(--panel-line); }
+details.table-view th:first-child, details.table-view td:first-child { text-align: left; }
+details.table-view th { color: var(--ink-muted); font-weight: 600; }
+
+.panel-source { margin: 0; color: var(--ink-faint); font-size: 11px; line-height: 1.4; }
+.panel-source a { color: var(--ink-muted); }
+.panel-msg { color: var(--ink-muted); }
+.panel-msg.error { color: #ffb4a8; }
+
+/* Selected resort badge */
+.badge.selected { border-color: var(--badge-ink); box-shadow: 0 0 0 3px var(--snow), 0 1px 4px rgba(0, 0, 0, 0.45); }
+
+/* Phones: the panel becomes a sheet along the bottom */
+@media (max-width: 600px) {
+  #panel {
+    top: auto;
+    left: 0;
+    max-height: 62%;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    max-height: 62%;
+    border-radius: 14px 14px 0 0;
+    padding: 16px max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
 }
