@@ -22,24 +22,6 @@ globe.controls().autoRotateSpeed = 0.4;
 // is a fixed number of degrees per second, so close up the ground would race by.)
 globe.controls().addEventListener('start', () => { globe.controls().autoRotate = false; });
 
-// ---------------------------------------------------------------------------
-// Zoom speed
-// ---------------------------------------------------------------------------
-// globe.gl slows zooming down as you get closer (speed ~ sqrt(altitude)), which
-// feels sluggish near the surface. Instead, make every scroll notch change the
-// camera's height above the ground by the same fraction, whatever the zoom.
-const ZOOM_STEP = 0.3; // each notch moves ~30% of the way to the ground
-
-function updateZoomSpeed() {
-  const a = globe.pointOfView().altitude;
-  // The controls scale the camera's distance from the globe's centre, R(1 + a),
-  // by 0.95^zoomSpeed per notch. Solve for the speed that gives a' = a(1 - step).
-  const scale = (1 + a * (1 - ZOOM_STEP)) / (1 + a);
-  globe.controls().zoomSpeed = Math.log(scale) / Math.log(0.95);
-}
-globe.controls().addEventListener('change', updateZoomSpeed); // runs after globe.gl's own handler
-updateZoomSpeed();
-
 // Badges are clickable HTML on top of the globe, so they'd swallow scroll-wheel
 // events. Pass those on to the globe's canvas so zooming works anywhere.
 document.getElementById('globe').addEventListener('wheel', e => {
