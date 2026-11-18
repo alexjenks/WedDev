@@ -1,9 +1,9 @@
 """Download each resort's logo from Wikipedia into img/logos/<id>.png.
 
 For every resort in data/ikon-resorts.json this script:
-  1. opens its English Wikipedia article (the "wiki" field; a search is used
-     if that article doesn't exist),
-  2. reads the "logo =" field of the article's info box,
+  1. opens its English Wikipedia article (the "wiki" field),
+  2. reads the "logo =" field of the article's info box, falling back to the
+     logo recorded on Wikidata (property P154) for that article,
   3. downloads a 256px PNG rendering of that logo file, and
   4. pads it to a transparent square so it sits neatly in a round badge.
 
@@ -37,6 +37,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "ikon-resorts.json"
 OUT = ROOT / "img" / "logos"
 API = "https://en.wikipedia.org/w/api.php"
+WIKIDATA = "https://www.wikidata.org/w/api.php"
 USER_AGENT = "ski-globe-logo-fetcher/0.1 (hobby project; python-urllib)"
 SIZE = 256
 PAUSE = 1.0  # seconds between requests
@@ -60,9 +61,9 @@ def http_get(url, tries=12):
             raise
 
 
-def api(**params):
+def api(base=API, **params):
     params = {"format": "json", "formatversion": "2", **params}
-    return json.loads(http_get(f"{API}?{urllib.parse.urlencode(params)}"))
+    return json.loads(http_get(f"{base}?{urllib.parse.urlencode(params)}"))
 
 
 def chunks(items, n):
@@ -73,6 +74,8 @@ def chunks(items, n):
 def logo_field(wikitext):
     """Pull the file name out of an info box's `| logo = ...` line."""
     m = re.search(r"^\s*\|\s*logo\s*=\s*(.+?)\s*$", wikitext, re.MULTILINE | re.IGNORECASE)
+    if not m:  # some info boxes put the logo in the image field
+        m = re.search(r"^\s*\|\s*image\s*=\s*(.*logo.*?)\s*$", wikitext, re.MULTILINE | re.IGNORECASE)
     if not m:
         return None
     value = m.group(1)
@@ -97,12 +100,9 @@ def find_articles(resorts):
             if title in existing:
                 found[r["id"]] = title
 
-    for r in resorts:  # fall back to a search for any article that wasn't found
+    for r in resorts:
         if r["id"] not in found:
-            hits = api(action="query", list="search", srsearch=f'{r["name"]} ski resort', srlimit=1)["query"]["search"]
-            if hits:
-                found[r["id"]] = hits[0]["title"]
-                print(f'  {r["name"]}: "{r["wiki"]}" not found, using search result "{hits[0]["title"]}"')
+            print(f'  {r["name"]}: no Wikipedia article called "{r["wiki"]}"; fix its "wiki" field')
     return found
 
 
@@ -117,6 +117,22 @@ def find_logo_files(titles):
                 name = logo_field(revs[0]["slots"]["main"]["content"])
                 if name:
                     logos[page["title"]] = name
+    return logos
+
+
+def find_wikidata_logos(titles):
+    """Map article title -> logo file name from Wikidata's "logo image" (P154)."""
+    logos = {}
+    for batch in chunks(sorted(set(titles)), 40):
+        data = api(base=WIKIDATA, action="wbgetentities", sites="enwiki", props="claims|sitelinks",
+                   sitefilter="enwiki", titles="|".join(batch))
+        for entity in data.get("entities", {}).values():
+            title = entity.get("sitelinks", {}).get("enwiki", {}).get("title")
+            claims = entity.get("claims", {}).get("P154", [])
+            if title and claims:
+                value = claims[0]["mainsnak"].get("datavalue", {}).get("value")
+                if value:
+                    logos[title] = value
     return logos
 
 
@@ -161,6 +177,10 @@ def main():
     articles = find_articles(todo)
     print("Reading info boxes…", flush=True)
     logo_files = find_logo_files(articles.values())
+    without = [t for t in articles.values() if t not in logo_files]
+    if without:
+        print("Checking Wikidata for the rest…", flush=True)
+        logo_files.update(find_wikidata_logos(without))
     print("Looking up logo images…", flush=True)
     image_urls = find_image_urls(logo_files.values())
 
@@ -170,7 +190,7 @@ def main():
         file = logo_files.get(title)
         url = image_urls.get(file)
         if not url:
-            missing.append(f'{r["name"]} ({title or "no article"})')
+            missing.append(f'{r["name"]} ({"no logo in " + title if title else "article not found"})')
             continue
         try:
             save_square_png(http_get(url), OUT / f'{r["id"]}.png')

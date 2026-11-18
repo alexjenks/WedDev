@@ -86,6 +86,22 @@ html, body {
 .badge:hover .badge-label,
 .badge:focus-visible .badge-label { display: block; }
 
+/* ---------- Cluster bubbles: count of resorts in one spot ---------- */
+.badge.cluster {
+  width: var(--size, 30px);
+  height: var(--size, 30px);
+  background: var(--badge-ink);
+  border-color: var(--badge-ring);
+  box-shadow: 0 0 0 3px rgba(159, 211, 245, 0.35), 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+.badge.cluster .count {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.badge.cluster .badge-label small { display: block; }
+
 @media (prefers-reduced-motion: reduce) {
   .badge { transition: none; }
 }

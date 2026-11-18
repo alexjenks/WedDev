@@ -11,14 +11,14 @@
     { "id": "palisades-tahoe", "name": "Palisades Tahoe", "region": "California, USA", "lat": 39.197, "lng": -120.235, "domain": "palisadestahoe.com", "wiki": "Palisades Tahoe" },
     { "id": "mammoth", "name": "Mammoth Mountain", "region": "California, USA", "lat": 37.651, "lng": -119.027, "domain": "mammothmountain.com", "wiki": "Mammoth Mountain" },
     { "id": "june", "name": "June Mountain", "region": "California, USA", "lat": 37.768, "lng": -119.090, "domain": "junemountain.com", "wiki": "June Mountain" },
-    { "id": "big-bear", "name": "Big Bear Mountain Resort", "region": "California, USA", "lat": 34.236, "lng": -116.890, "domain": "bigbearmountainresort.com", "wiki": "Big Bear Mountain Resort" },
+    { "id": "big-bear", "name": "Big Bear Mountain Resort", "region": "California, USA", "lat": 34.236, "lng": -116.890, "domain": "bigbearmountainresort.com", "wiki": "Snow Summit" },
     { "id": "snow-valley", "name": "Snow Valley", "region": "California, USA", "lat": 34.225, "lng": -117.036, "domain": "snow-valley.com", "wiki": "Snow Valley Mountain Resort" },
 
     { "id": "crystal", "name": "Crystal Mountain", "region": "Washington, USA", "lat": 46.935, "lng": -121.475, "domain": "crystalmountainresort.com", "wiki": "Crystal Mountain (Washington)" },
     { "id": "snoqualmie", "name": "The Summit at Snoqualmie", "region": "Washington, USA", "lat": 47.421, "lng": -121.413, "domain": "summitatsnoqualmie.com", "wiki": "The Summit at Snoqualmie" },
     { "id": "mt-bachelor", "name": "Mt. Bachelor", "region": "Oregon, USA", "lat": 43.979, "lng": -121.689, "domain": "mtbachelor.com", "wiki": "Mount Bachelor ski area" },
     { "id": "schweitzer", "name": "Schweitzer", "region": "Idaho, USA", "lat": 48.368, "lng": -116.623, "domain": "schweitzer.com", "wiki": "Schweitzer Mountain" },
-    { "id": "sun-valley", "name": "Sun Valley", "region": "Idaho, USA", "lat": 43.672, "lng": -114.364, "domain": "sunvalley.com", "wiki": "Sun Valley Resort" },
+    { "id": "sun-valley", "name": "Sun Valley", "region": "Idaho, USA", "lat": 43.672, "lng": -114.364, "domain": "sunvalley.com", "wiki": "Sun Valley, Idaho" },
     { "id": "alyeska", "name": "Alyeska", "region": "Alaska, USA", "lat": 60.970, "lng": -149.098, "domain": "alyeskaresort.com", "wiki": "Alyeska Resort" },
 
     { "id": "solitude", "name": "Solitude", "region": "Utah, USA", "lat": 40.620, "lng": -111.592, "domain": "solitudemountain.com", "wiki": "Solitude Mountain Resort" },
@@ -36,7 +36,6 @@
     { "id": "the-highlands", "name": "The Highlands", "region": "Michigan, USA", "lat": 45.469, "lng": -84.905, "domain": "highlandsharborsprings.com", "wiki": "The Highlands at Harbor Springs" },
     { "id": "snowshoe", "name": "Snowshoe", "region": "West Virginia, USA", "lat": 38.410, "lng": -79.994, "domain": "snowshoemtn.com", "wiki": "Snowshoe Mountain" },
     { "id": "camelback", "name": "Camelback", "region": "Pennsylvania, USA", "lat": 41.051, "lng": -75.356, "domain": "skicamelback.com", "wiki": "Camelback Mountain Resort" },
-    { "id": "windham", "name": "Windham Mountain", "region": "New York, USA", "lat": 42.297, "lng": -74.258, "domain": "windhammountainclub.com", "wiki": "Windham Mountain" },
     { "id": "killington", "name": "Killington", "region": "Vermont, USA", "lat": 43.626, "lng": -72.797, "domain": "killington.com", "wiki": "Killington Ski Resort" },
     { "id": "pico", "name": "Pico", "region": "Vermont, USA", "lat": 43.662, "lng": -72.843, "domain": "picomountain.com", "wiki": "Pico Mountain" },
     { "id": "sugarbush", "name": "Sugarbush", "region": "Vermont, USA", "lat": 44.136, "lng": -72.894, "domain": "sugarbush.com", "wiki": "Sugarbush Resort" },
@@ -46,6 +45,7 @@
     { "id": "sugarloaf", "name": "Sugarloaf", "region": "Maine, USA", "lat": 45.031, "lng": -70.313, "domain": "sugarloaf.com", "wiki": "Sugarloaf (ski resort)" },
 
     { "id": "tremblant", "name": "Tremblant", "region": "Quebec, Canada", "lat": 46.210, "lng": -74.585, "domain": "tremblant.ca", "wiki": "Mont Tremblant Resort" },
+    { "id": "le-massif", "name": "Le Massif de Charlevoix", "region": "Quebec, Canada", "lat": 47.284, "lng": -70.571, "domain": "lemassif.com", "wiki": "Le Massif" },
     { "id": "blue-mountain", "name": "Blue Mountain", "region": "Ontario, Canada", "lat": 44.501, "lng": -80.316, "domain": "bluemountain.ca", "wiki": "Blue Mountain (ski resort)" },
     { "id": "lake-louise", "name": "Lake Louise", "region": "Alberta, Canada", "lat": 51.441, "lng": -116.162, "domain": "skilouise.com", "wiki": "Lake Louise Ski Resort" },
     { "id": "sunshine", "name": "Sunshine Village", "region": "Alberta, Canada", "lat": 51.115, "lng": -115.763, "domain": "skibanff.com", "wiki": "Sunshine Village" },
@@ -58,14 +58,14 @@
     { "id": "thredbo", "name": "Thredbo", "region": "New South Wales, Australia", "lat": -36.505, "lng": 148.306, "domain": "thredbo.com.au", "wiki": "Thredbo" },
     { "id": "mt-buller", "name": "Mt Buller", "region": "Victoria, Australia", "lat": -37.146, "lng": 146.437, "domain": "mtbuller.com.au", "wiki": "Mount Buller" },
     { "id": "coronet-peak", "name": "Coronet Peak", "region": "New Zealand", "lat": -45.081, "lng": 168.729, "domain": "coronetpeak.co.nz", "wiki": "Coronet Peak" },
-    { "id": "remarkables", "name": "The Remarkables", "region": "New Zealand", "lat": -45.054, "lng": 168.813, "domain": "theremarkables.co.nz", "wiki": "The Remarkables Ski Area" },
+    { "id": "remarkables", "name": "The Remarkables", "region": "New Zealand", "lat": -45.054, "lng": 168.813, "domain": "theremarkables.co.nz", "wiki": "The Remarkables" },
     { "id": "mt-hutt", "name": "Mt Hutt", "region": "New Zealand", "lat": -43.470, "lng": 171.530, "domain": "mthutt.co.nz", "wiki": "Mount Hutt" },
 
     { "id": "niseko", "name": "Niseko United", "region": "Hokkaido, Japan", "lat": 42.862, "lng": 140.698, "domain": "niseko.ne.jp", "wiki": "Niseko United" },
     { "id": "lotte-arai", "name": "Lotte Arai Resort", "region": "Niigata, Japan", "lat": 36.990, "lng": 138.190, "domain": "lottearai-resort.com", "wiki": "Lotte Arai Resort" },
 
-    { "id": "zermatt", "name": "Zermatt Matterhorn", "region": "Switzerland", "lat": 46.024, "lng": 7.749, "domain": "zermatt.ch", "wiki": "Zermatt Ski Resort" },
-    { "id": "kitzbuehel", "name": "Kitzbühel", "region": "Austria", "lat": 47.446, "lng": 12.392, "domain": "kitzski.at", "wiki": "KitzSki" },
+    { "id": "zermatt", "name": "Zermatt Matterhorn", "region": "Switzerland", "lat": 46.024, "lng": 7.749, "domain": "zermatt.ch", "wiki": "Zermatt" },
+    { "id": "kitzbuehel", "name": "Kitzbühel", "region": "Austria", "lat": 47.446, "lng": 12.392, "domain": "kitzski.at", "wiki": "Kitzbühel" },
     { "id": "dolomiti-superski", "name": "Dolomiti Superski", "region": "Italy", "lat": 46.530, "lng": 11.800, "domain": "dolomitisuperski.com", "wiki": "Dolomiti Superski" },
     { "id": "chamonix", "name": "Chamonix Mont-Blanc", "region": "France", "lat": 45.924, "lng": 6.870, "domain": "chamonix.com", "wiki": "Chamonix" },
     { "id": "grandvalira", "name": "Grandvalira", "region": "Andorra", "lat": 42.553, "lng": 1.661, "domain": "grandvalira.com", "wiki": "Grandvalira" }

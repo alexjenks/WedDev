@@ -5,6 +5,7 @@ and nothing to install: the library loads from a CDN.
 
 Current step: a wintery topographic globe with a logo badge for every Ikon Pass resort.
 Drag to rotate, scroll/pinch to zoom, hover a badge for the resort's name.
+When zoomed out, nearby resorts merge into a numbered bubble; click it to zoom in.
 Next step: show an Open-Meteo snowfall forecast when you click a resort.
 
 ## Run it
@@ -42,6 +43,16 @@ Each badge tries, in order:
 1. `img/logos/<id>.png` (your own file, e.g. `img/logos/jackson-hole.png`)
 2. The resort website's icon, via Google's favicon service
 3. The resort's initials
+
+To download logos from Wikipedia/Wikidata automatically (needs Pillow):
+
+```sh
+python3 tools/fetch_logos.py           # only fetches logos you don't have yet
+python3 tools/fetch_logos.py --force   # re-download all
+```
+
+It uses each resort's `wiki` field in `data/ikon-resorts.json` and lists the
+resorts it couldn't find a logo for. Logos are trademarks of their resorts.
 
 Website icons are often a simplified mark rather than the full logo, so for the
 best look save each resort's logo as a square PNG (128x128 or larger, transparent
