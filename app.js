@@ -8,7 +8,9 @@ const globe = Globe()(document.getElementById('globe'))
   .bumpImageUrl('img/earth-topology.png')      // elevation map: makes mountains catch the light
   .backgroundImageUrl('img/night-sky.png')     // starry background
   .atmosphereColor('#d6ecff')                  // soft pale-blue halo around the globe
-  .atmosphereAltitude(0.18);
+  .atmosphereAltitude(0.18)
+  .globeCurvatureResolution(1);               // finer sphere mesh (default 4°) so the surface doesn't sag
+                                               // below markers between mesh points when zoomed in
 
 // Start looking at North America, where most Ikon resorts are.
 globe.pointOfView({ lat: 42, lng: -100, altitude: 2.2 });
@@ -16,6 +18,9 @@ globe.pointOfView({ lat: 42, lng: -100, altitude: 2.2 });
 // Slowly spin the globe until the user grabs it (unless they prefer reduced motion).
 globe.controls().autoRotate = !matchMedia('(prefers-reduced-motion: reduce)').matches;
 globe.controls().autoRotateSpeed = 0.4;
+// Stop spinning for good as soon as the user drags, scrolls or pinches. (The spin
+// is a fixed number of degrees per second, so close up the ground would race by.)
+globe.controls().addEventListener('start', () => { globe.controls().autoRotate = false; });
 
 // ---------------------------------------------------------------------------
 // Zoom speed
@@ -220,7 +225,7 @@ fetch('data/ikon-resorts.json')
     globe
       .htmlLat('lat')
       .htmlLng('lng')
-      .htmlAltitude(0.005)
+      .htmlAltitude(0) // on the surface: anything higher slides against the ground when zoomed in
       .htmlElement(elementFor)
       .htmlTransitionDuration(0);
     updateGroups();
@@ -331,7 +336,7 @@ function updateDetail() {
 globe
   .tileLat('lat').tileLng('lng')
   .tileWidth('width').tileHeight('height')
-  .tileAltitude(0.0006)
+  .tileAltitude(0.00015) // ~1 km: just above the globe, so it doesn't drift when panning
   .tileCurvatureResolution(0.25)
   .tilesTransitionDuration(0)
   .tileMaterial(detailMaterial);
